@@ -18,7 +18,7 @@ const Subscription = ({ user, onClose }) => {
     yearly: 480,
   };
 
-  // 🔥 Check subscription status
+  // 🔥 Check current subscription status from Firebase
   useEffect(() => {
     if (!user) return;
 
@@ -29,6 +29,7 @@ const Subscription = ({ user, onClose }) => {
     });
   }, [user]);
 
+  // 🚀 Handle payment submission
   const submitPayment = async () => {
     if (!reference.trim()) {
       alert("Please enter the reference number.");
@@ -37,106 +38,110 @@ const Subscription = ({ user, onClose }) => {
 
     setLoading(true);
 
-    await update(ref(db, `accounts/${user.uid}`), {
-      isSubscribed: false,
-      subscriptionStatus: "pending",
-      subscriptionPlan: plan,
-      amount: prices[plan],
-      referenceNumber: reference.trim(),
-      submittedAt: Date.now(),
-    });
+    try {
+      await update(ref(db, `accounts/${user.uid}`), {
+        isSubscribed: false,
+        subscriptionStatus: "pending",
+        subscriptionPlan: plan,
+        amount: prices[plan],
+        referenceNumber: reference.trim(),
+        submittedAt: Date.now(),
+      });
 
-    setStatus("pending");
-    setLoading(false);
+      setStatus("pending");
+    } catch (error) {
+      console.error("Error submitting payment:", error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // 🔒 PENDING VIEW
-  if (status === "pending") {
-    return (
-      <div className="subscription-overlay">
-        <div className="subscription-modal">
-          <h2>Payment Pending ⏳</h2>
-
-          <p className="pending-text">
-            Your payment has been submitted and is currently
-            <strong> waiting for admin approval</strong>.
-          </p>
-
-          <p className="pending-text">
-            If this takes too long, you may contact:
-          </p>
-
-          <p className="contact-number">📞 09565379494</p>
-
-          <button className="btn-secondary" onClick={onClose}>
-            Close
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // 💳 NORMAL SUBSCRIPTION VIEW
   return (
-    <div className="subscription-overlay">
-      <div className="subscription-modal">
-        <h2>Choose Your Plan</h2>
-        <p>Select a subscription and pay via QR code.</p>
+    <div className="sub-overlay">
+      <div className={`sub-modal ${status === "pending" ? "compact-view" : "landscape-small"}`}>
+        <button className="close-x" onClick={onClose}>
+          &times;
+        </button>
 
-        {/* PLAN SELECT */}
-        <div className="subscription-plans">
-          <button
-            className={`plan-card ${plan === "monthly" ? "active" : ""}`}
-            onClick={() => setPlan("monthly")}
-          >
-            <h3>Monthly</h3>
-            <p>₱50 / month</p>
-          </button>
+        {status === "pending" ? (
+          /* 🔒 PENDING VIEW: Shows when payment is submitted */
+          <div className="pending-container">
+            <h3>Payment Pending ⏳</h3>
+            <p>Your payment is waiting for admin approval.</p>
+            <p className="contact-small">📞 09565379494</p>
+            <button className="btn-secondary sm" onClick={onClose}>
+              Close
+            </button>
+          </div>
+        ) : (
+          /* 💳 SELECTION VIEW: Normal subscription flow */
+          <>
+            <div className="sub-header">
+              <h2>Subscription</h2>
+              <p>Select plan and scan to pay</p>
+            </div>
 
-          <button
-            className={`plan-card ${plan === "yearly" ? "active" : ""}`}
-            onClick={() => setPlan("yearly")}
-          >
-            <h3>Yearly</h3>
-            <p>
-              ₱480 <span className="discount">20% OFF</span>
-            </p>
-          </button>
-        </div>
+            <div className="sub-content-split">
+              {/* LEFT SIDE: SELECTION & INPUT */}
+              <div className="sub-left">
+                <div className="sub-plans">
+                  <div
+                    className={`plan-mini ${plan === "monthly" ? "active" : ""}`}
+                    onClick={() => setPlan("monthly")}
+                  >
+                    <strong>Monthly</strong>
+                    <span>₱50</span>
+                  </div>
 
-        {/* QR CODE */}
-        <div className="subscription-qr">
-          <img
-            src={plan === "monthly" ? monthlyQR : yearlyQR}
-            alt="QR Code"
-          />
-          <p className="qr-note">
-            Scan to pay ₱{prices[plan]} ({plan})
-          </p>
-        </div>
+                  <div
+                    className={`plan-mini ${plan === "yearly" ? "active" : ""}`}
+                    onClick={() => setPlan("yearly")}
+                  >
+                    <strong>Yearly</strong>
+                    <span>
+                      ₱480 <em className="disc">-20%</em>
+                    </span>
+                  </div>
+                </div>
 
-        {/* REFERENCE INPUT */}
-        <input
-          type="text"
-          className="subscription-input"
-          placeholder="Enter reference number"
-          value={reference}
-          onChange={(e) => setReference(e.target.value)}
-        />
+                <div className="sub-input-group">
+                  <input
+                    type="text"
+                    className="sub-input"
+                    placeholder="Reference Number"
+                    value={reference}
+                    onChange={(e) => setReference(e.target.value)}
+                  />
+                  <div className="sub-actions">
+                    <button
+                      className="btn-primary sm"
+                      onClick={submitPayment}
+                      disabled={loading}
+                    >
+                      {loading ? "..." : "Submit Payment"}
+                    </button>
+                    <button className="btn-secondary sm" onClick={onClose}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-        {/* ACTIONS */}
-        <div className="subscription-actions">
-          <button
-            className="btn-primary"
-            onClick={submitPayment}
-            disabled={loading}
-          >
-            {loading ? "Submitting..." : "Submit Payment"}
-          </button>
-          <button className="btn-secondary" onClick={onClose}>
-            Cancel
-          </button>
-        </div>
+              {/* RIGHT SIDE: QR CODE */}
+              <div className="sub-right">
+                <div className="sub-qr-box">
+                  <img
+                    src={plan === "monthly" ? monthlyQR : yearlyQR}
+                    alt="QR Code"
+                  />
+                  <p>Pay ₱{prices[plan]}</p>
+                  <span className="badge-mini">{plan.toUpperCase()}</span>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
