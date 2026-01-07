@@ -1,0 +1,220 @@
+/* src/styles/Subscription.css */
+
+/* ===== Overlay ===== */
+.subscription-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.25s ease;
+  }
+  
+  /* ===== Modal ===== */
+  .subscription-modal {
+    width: 100%;
+    max-width: 420px;
+    background: linear-gradient(
+      145deg,
+      rgba(30, 30, 40, 0.95),
+      rgba(20, 20, 30, 0.95)
+    );
+    border-radius: 18px;
+    padding: 28px 26px 30px;
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.5),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    text-align: center;
+    color: #fff;
+    animation: scaleUp 0.3s ease;
+  }
+  
+  /* ===== Title ===== */
+  .subscription-modal h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg, #4be1ff, #9b8cff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  /* ===== Description ===== */
+  .subscription-modal p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 26px;
+  }
+  
+  /* ===== Actions ===== */
+  .subscription-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  
+  /* ===== Buttons ===== */
+  .btn-primary {
+    flex: 1;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    color: #0b1020;
+    background: linear-gradient(135deg, #4be1ff, #9b8cff);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(75, 225, 255, 0.35);
+  }
+  
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  
+  .btn-secondary {
+    flex: 1;
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.04);
+    transition: background 0.15s ease, border 0.15s ease;
+  }
+  
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  /* ===== Plans ===== */
+.subscription-plans {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.plan-card {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.plan-card h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.plan-card p {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.plan-card.active {
+  background: linear-gradient(135deg, #4be1ff33, #9b8cff33);
+  border-color: #4be1ff;
+}
+
+.discount {
+  font-size: 0.75rem;
+  color: #4be1ff;
+  margin-left: 4px;
+}
+
+/* ===== QR ===== */
+.subscription-qr {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.subscription-qr img {
+  width: 180px;
+  border-radius: 12px;
+  background: #fff;
+  padding: 10px;
+}
+
+.qr-note {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+/* ===== Input ===== */
+.subscription-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  margin-bottom: 18px;
+}
+
+.subscription-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.pending-text {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  margin-bottom: 10px;
+}
+
+.contact-number {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #4be1ff;
+  margin-bottom: 20px;
+}
+
+  /* ===== Animations ===== */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes scaleUp {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  /* ===== Mobile ===== */
+  @media (max-width: 480px) {
+    .subscription-modal {
+      margin: 0 16px;
+      padding: 24px 20px 26px;
+    }
+  
+    .subscription-modal h2 {
+      font-size: 1.4rem;
+    }
+  }
+  
