@@ -225,7 +225,7 @@ const Admin = ({ user, onBack }) => {
               )}
 
               {activeMenu === "users" && (
-                <AdminUser users={users} />
+                <AdminUser users={users} setUsers={setUsers} />
               )}
 
               {activeMenu === "revenue" && (
