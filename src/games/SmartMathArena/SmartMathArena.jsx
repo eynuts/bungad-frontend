@@ -6,7 +6,7 @@ import "./SmartMathArena.css";
 import bgImage from "../../assets/Smart/bg.png"; 
 
 const SERVER_URL =
-  import.meta.env.VITE_SMARTMATH_SERVER || "http://localhost:3001";
+  import.meta.env.VITE_SMARTMATH_SERVER || "https://bungad-backend.onrender.com";
 const LEADERBOARD_ENDPOINT = `${SERVER_URL}/leaderboard`; 
 
 // --- Sub-Components ---
@@ -507,4 +507,5 @@ const sidebarContent = isMatchRunning || isMatchFinished
       </div>
     </div>
   );
+
 }
